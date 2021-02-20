@@ -32,19 +32,13 @@ class Node {
     }
     
     // MARK: - Helpers
-        
-    var childrenCount: String? {
-        let count = children.count
-        guard count > 0 else { return nil }
-        return "\(count) node\(count > 1 ? "s" : "")"
-    }
     
-    var count: Int {
+    var numberOfChildren: Int {
         children.count
     }
     
-    var isLeaf: Bool {
-        children.isEmpty
+    var hasChildren: Bool {
+        !children.isEmpty
     }
 }
 

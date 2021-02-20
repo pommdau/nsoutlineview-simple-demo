@@ -9,7 +9,7 @@ import Cocoa
 
 
 final class ViewController: NSViewController {
-        
+    
     // MARK: - Properties
     
     @IBOutlet weak var outlineView: NSOutlineView!
@@ -35,7 +35,7 @@ final class ViewController: NSViewController {
     @IBAction func doubleClickedItem(_ sender: NSOutlineView) {
         
         guard let node = sender.item(atRow: sender.clickedRow) as? Node,
-              node.count > 0 else {
+              node.hasChildren else {
             return
         }
         
@@ -63,17 +63,17 @@ final class ViewController: NSViewController {
         nodes.append(contentsOf: Node.createSampleNodes())
         outlineView.reloadData()
     }
-
+    
 }
 
 // MARK: - NSOutlineViewDataSource
 
 extension ViewController: NSOutlineViewDataSource {
-    // オブジェクトの含めるchildrenの数を返す
+    // itemが含むchildrenの数を返す
     // item = nilの場合、トップレベルの項目のChildrenの数を返す
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
         if let node = item as? Node {
-            return node.children.count
+            return node.numberOfChildren
         }
         
         return nodes.count
@@ -91,9 +91,8 @@ extension ViewController: NSOutlineViewDataSource {
     
     // trueを返すとき、CellViewににDisclosure Buttonが表示される
     func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
-        
         if let node = item as? Node {
-            return node.children.count > 0
+            return node.hasChildren
         }
         
         return false
@@ -130,10 +129,10 @@ extension ViewController: NSOutlineViewDelegate {
         }
         
         myCellView.configureUI(withNode: node)
-                
+        
         return myCellView
     }
-        
+    
     // 行選択の可否
     func outlineView(_ outlineView: NSOutlineView, shouldSelectItem item: Any) -> Bool {
         return true
@@ -145,7 +144,6 @@ extension ViewController: NSOutlineViewDelegate {
         }
         
         let selectedIndex = outlineView.selectedRow
-        
         guard let node = outlineView.item(atRow: selectedIndex) as? Node else {
             return
         }
